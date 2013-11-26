@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c8eb9d86-fef3-41e8-9225-1a5f159c4005" name="Default" comment="Replacing sqlite3 by sqlalchimy seems like a good idea. And tornado template system is just magically working.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_event.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_register.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.db" afterPath="$PROJECT_DIR$/main.db" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/device.html" afterPath="$PROJECT_DIR$/templates/device.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/devices.html" afterPath="$PROJECT_DIR$/templates/devices.html" />
+    <list default="true" id="c8eb9d86-fef3-41e8-9225-1a5f159c4005" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/sc1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/sc2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/sqlite.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/edms.iws" afterPath="$PROJECT_DIR$/edms.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/edms.py" afterPath="$PROJECT_DIR$/edms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="$PROJECT_DIR$/templates/home.html" />
     </list>
     <ignored path="edms.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/base.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385428627856" ignored="false" />
     <file path="/edms.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385431210156" ignored="false" />
     <file path="/about.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385429510863" ignored="false" />
-    <file path="/Dummy.txt" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385431482095" ignored="false" />
+    <file path="/Dummy.txt" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385431569112" ignored="false" />
     <file path="/query.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385426863764" ignored="false" />
     <file path="/fragment.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385427704212" ignored="false" />
     <file path="/device.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385429643051" ignored="false" />
@@ -93,10 +89,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="device_event.sh" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="sqlite.txt" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/quick-look/sqlite.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="33" column="18" selection-start="975" selection-end="975" vertical-scroll-proportion="0.7454819">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="device_event.sh" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="0" selection-start="571" selection-end="571" vertical-scroll-proportion="0.49698794">
+            <state line="15" column="0" selection-start="398" selection-end="448" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -191,6 +196,7 @@
         <option value="$PROJECT_DIR$/templates/device.html" />
         <option value="$PROJECT_DIR$/edms.py" />
         <option value="$PROJECT_DIR$/requests/device_event.sh" />
+        <option value="$PROJECT_DIR$/quick-look/schema.sql" />
       </list>
     </option>
   </component>
@@ -255,35 +261,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="requests" />
+              <option name="myItemId" value="quick-look" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -543,7 +521,11 @@
       <created>1385428855775</created>
       <updated>1385428855775</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added DeviceLog. &#10;&#10;I wish I took the time to look at this earlier.&#10;&#10;And going to sleep...">
+      <created>1385431573087</created>
+      <updated>1385431573087</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -616,7 +598,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Replacing sqlite3 by sqlalchimy seems like a good idea. And tornado template system is just magically working." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added DeviceLog. &#10;&#10;I wish I took the time to look at this earlier.&#10;&#10;And going to sleep..." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -631,6 +613,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="Replacing sqlite3 by sqlalchimy seems like a good idea. And tornado template system is just magically working." />
+    <MESSAGE value="Added DeviceLog. &#10;&#10;I wish I took the time to look at this earlier.&#10;&#10;And going to sleep..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -726,6 +709,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="398" selection-end="448" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/edms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="149" column="36" selection-start="4556" selection-end="4556" vertical-scroll-proportion="0.0">
@@ -735,9 +725,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
+    <entry file="file://$PROJECT_DIR$/quick-look/sqlite.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="571" selection-end="571" vertical-scroll-proportion="0.49698794">
+        <state line="33" column="18" selection-start="975" selection-end="975" vertical-scroll-proportion="0.7454819">
           <folding />
         </state>
       </provider>

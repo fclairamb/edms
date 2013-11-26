@@ -1,0 +1,37 @@
+sqlite> .schema
+CREATE TABLE devices (
+	id INTEGER NOT NULL, 
+	ident VARCHAR, 
+	type VARCHAR, 
+	date_created DATETIME, 
+	date_updated DATETIME, 
+	date_seen DATETIME, 
+	PRIMARY KEY (id)
+);
+CREATE TABLE config (
+	name VARCHAR NOT NULL, 
+	value VARCHAR, 
+	PRIMARY KEY (name)
+);
+CREATE TABLE device_logs (
+	id INTEGER NOT NULL, 
+	device_id INTEGER, 
+	date DATETIME, 
+	type VARCHAR, 
+	content VARCHAR, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(device_id) REFERENCES devices (id)
+);
+sqlite> select * from config;
+nb_launches|34
+sqlite> select * from devices;
+1|toto||2013-11-26 01:04:06.519965||2013-11-26 01:04:11.427344
+2|tata||2013-11-26 01:04:27.720979||2013-11-26 01:04:34.096123
+3|titi|SK05|2013-11-26 01:05:45.332134||2013-11-26 01:05:45.333304
+4|imei:357973040149194|TC65i-track|2013-11-26 01:35:46.983808|2013-11-26 01:35:46.983804|2013-11-26 02:03:55.801760
+sqlite> select * from device_logs;
+1|4|2013-11-26 02:38:00.000000|battery-low|{"battery-level": "30%"}
+2|4|2013-11-26 02:40:00.000000|high-speed|{"speed": "400kmh"}
+3|4|2013-11-26 02:38:11.000000|battery-low|{"battery-level": "30%"}
+4|4|2013-11-26 02:40:22.000000|high-speed|{"speed": "400kmh"}
+sqlite> 
