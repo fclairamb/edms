@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block header %}
+<h1>{{ title }}</h1>
+{% end %}
+
+{% block content %}
+<p>
+    Information about a device:
+    <table class="table table-striped">
+        <tr>
+            <td>
+                Ident
+            </td>
+            <td>
+                {{ device.ident }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Type
+            </td>
+            <td>
+                {{ device.type }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Last seen
+            </td>
+            <td>
+                {{ device.date_seen }}
+            </td>
+        </tr>
+    </table>
+</p>
+{% end %}

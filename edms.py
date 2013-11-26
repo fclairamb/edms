@@ -1,10 +1,13 @@
-from datetime import date
+from datetime import date, datetime
 import tornado.escape
 import tornado.ioloop
 import tornado.web
 import os
 import gettext
-import sqlite3
+import sqlalchemy
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 _ = gettext.gettext
 
 EDMS_VERSION = '0.1'
@@ -12,46 +15,64 @@ EDMS_VERSION = '0.1'
 # The idea of this management interface is simply to follow some devices. It's pretty much empty
 # but it can be easily extended.
 
-# DB Preparation
-#if not os.path.isdir(os.environ['HOME']+"/.emds"):
-#    os.mkdir(os.environ['HOME']+"/.emds")
-#db = sqlite3.connect(os.environ['HOME']+"/.emds/main.db")
-db = sqlite3.connect("main.db")
+engine = sqlalchemy.create_engine('sqlite:///main.db', echo=True)
 
-# This is obviously NOT 3NF, but who cares ???
-stmts = ["""
-CREATE TABLE IF NOT EXISTS devices (
-  ident VARCHAR UNIQUE,
-  type VARCHAR,
-  date_created DATETIME,
-  date_updated DATETIME
-);""",
-"""
-CREATE TABLE IF NOT EXISTS device_properties (
-  device_id INT,
-  name VARCHAR,
-  value VARCHAR
-);
-""",
-"""
-CREATE UNIQUE INDEX IF NOT EXISTS device_properties_id_name ON device_properties (device_id, name);
-""",
-"""
-CREATE INDEX IF NOT EXISTS device_properties_name_value ON device_properties(name, value);
-""",
-"""
-CREATE TABLE IF NOT EXISTS device_logs (
-  device_id INT,
-  date DATETIME,
-  source VARCHAR,
-  type VARCHAR,
-  content TEXT
-);
-"""]
+Session = sessionmaker(bind=engine)
+session = Session()
 
-for st in stmts:
-    db.execute(st)
- 
+Base = declarative_base()
+
+class Config(Base):
+    __tablename__ = "config"
+    name = Column(String, primary_key=True)
+    value = Column(String)
+
+    def __repr__(self):
+        return "Config<name={name},value={value}>".format(id=self.id, name=self.name)
+
+class Device(Base):
+    __tablename__ = "devices"
+    id = Column(Integer, primary_key=True)
+    ident = Column(String)
+    type = Column(String)
+    date_created = Column(DateTime)
+    date_updated = Column(DateTime)
+    date_seen = Column(DateTime)
+
+    def __repr__(self):
+        return "User<id={id},name={name}>".format(id=self.id, name=self.name)
+
+Base.metadata.create_all(engine)
+
+#conf = session.query(Config).filter(Config.name == "nb_launches").first()
+#if not conf:
+#    conf = Config(name="nb_launches", value="1")
+#    session.add( conf )
+#conf.value = str(int(conf.value) + 1)
+#session.commit()
+
+def conf_get(name):
+        conf = session.query(Config).filter(Config.name == name).first()
+        if conf:
+            return conf.value
+        else:
+            return None
+
+def conf_set(name, value):
+        conf = session.query(Config).filter(Config.name == name).first()
+        if not conf:
+            conf = Config(name=name)
+            session.add(conf)
+        conf.value=value
+        session.commit()
+
+nbLaunches = conf_get("nb_launches")
+if not nbLaunches:
+    nbLaunches = 1
+else:
+    nbLaunches = str( int(nbLaunches) + 1 )
+conf_set("nb_launches", nbLaunches)
+
 class VersionHandler(tornado.web.RequestHandler):
     def get(self):
         response = { 'version': EDMS_VERSION,
@@ -61,14 +82,20 @@ class VersionHandler(tornado.web.RequestHandler):
 
 class DeviceById(tornado.web.RequestHandler):
     def get(self, id):
-        response = { 'id': int(id),
-                     'name': 'My device'}
-        self.write(response)
+        device = session.query(Device).filter(Device.id == int(id)).first()
+        if device:
+            self.render("device.html", title=_("Device"), device=device)
+        else:
+            self.render("404.html", title=_("Device not found"))
 
+class Devices(tornado.web.RequestHandler):
+    def get(self):
+        devices = session.query(Device).all()
+        self.render("devices.html", title=_("Devices"), devices=devices)
 
 class Index(tornado.web.RequestHandler):
     def get(self):
-       self.render("home.html", title=_("Welcome"))
+        self.render("home.html", title=_("Welcome"))
 
 
 class About(tornado.web.RequestHandler):
@@ -77,18 +104,22 @@ class About(tornado.web.RequestHandler):
 
 
 class DeviceRegister(tornado.web.RequestHandler):
-    def get(self):
-        data = tornado.escape.json_decode(self.request.body)
-        print "ID: "+str(data)
-
     def post(self):
+        # It must be something like that:
+        # {"ident":"imei:2492492", "type":"TC65i"
         data = tornado.escape.json_decode(self.request.body)
-        print "ID: "+str(data)
+        device = session.query(Device).filter(Device.ident == data['ident']).first()
+        if not device:
+            device = Device(ident=data['ident'], type=data.get('type'), date_created=datetime.utcnow())
+            session.add(device)
+        device.date_seen = datetime.utcnow()
+        session.commit()
 
 application = tornado.web.Application(
 # Paths
    [   
        (r"/device/([0-9]+)", DeviceById),
+       (r"/devices", Devices),
        (r"/version", VersionHandler),
        (r"/", Index),
        (r"/device/register", DeviceRegister),
