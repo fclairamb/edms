@@ -1,16 +1,15 @@
 from datetime import date, datetime
+import dateutil.parser
 import tornado.escape
 import tornado.ioloop
 import tornado.web
 import os
 import gettext
 import sqlalchemy
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 _ = gettext.gettext
-
-EDMS_VERSION = '0.1'
 
 # The idea of this management interface is simply to follow some devices. It's pretty much empty
 # but it can be easily extended.
@@ -40,16 +39,17 @@ class Device(Base):
     date_seen = Column(DateTime)
 
     def __repr__(self):
-        return "User<id={id},name={name}>".format(id=self.id, name=self.name)
+        return "Device<ident={ident},type={type}>".format(id=self.id, name=self.name)
+
+class DeviceLog(Base):
+    __tablename__ = 'device_logs'
+    id = Column(Integer, primary_key=True)
+    device_id = Column(Integer, ForeignKey('devices.id'))
+    date = Column(DateTime)
+    type = Column(String)
+    content = Column(String)
 
 Base.metadata.create_all(engine)
-
-#conf = session.query(Config).filter(Config.name == "nb_launches").first()
-#if not conf:
-#    conf = Config(name="nb_launches", value="1")
-#    session.add( conf )
-#conf.value = str(int(conf.value) + 1)
-#session.commit()
 
 def conf_get(name):
         conf = session.query(Config).filter(Config.name == name).first()
@@ -73,13 +73,6 @@ else:
     nbLaunches = str( int(nbLaunches) + 1 )
 conf_set("nb_launches", nbLaunches)
 
-class VersionHandler(tornado.web.RequestHandler):
-    def get(self):
-        response = { 'version': EDMS_VERSION,
-                     'last_build':  date.today().isoformat() }
-        self.write(response)
-
-
 class DeviceById(tornado.web.RequestHandler):
     def get(self, id):
         device = session.query(Device).filter(Device.id == int(id)).first()
@@ -88,9 +81,11 @@ class DeviceById(tornado.web.RequestHandler):
         else:
             self.render("404.html", title=_("Device not found"))
 
+
 class Devices(tornado.web.RequestHandler):
     def get(self):
         devices = session.query(Device).all()
+
         self.render("devices.html", title=_("Devices"), devices=devices)
 
 class Index(tornado.web.RequestHandler):
@@ -105,26 +100,66 @@ class About(tornado.web.RequestHandler):
 
 class DeviceRegister(tornado.web.RequestHandler):
     def post(self):
-        # It must be something like that:
-        # {"ident":"imei:2492492", "type":"TC65i"
         data = tornado.escape.json_decode(self.request.body)
         device = session.query(Device).filter(Device.ident == data['ident']).first()
         if not device:
-            device = Device(ident=data['ident'], type=data.get('type'), date_created=datetime.utcnow())
+            device = Device(
+                ident=data['ident'],
+                type=data.get('type'),
+                date_updated=datetime.utcnow(),
+                date_created=datetime.utcnow()
+            )
             session.add(device)
         device.date_seen = datetime.utcnow()
         session.commit()
+        self.write({"status": "ok", "device_id": device.id})
+
+
+class DeviceEvent(tornado.web.RequestHandler):
+    def post(self):
+        data = tornado.escape.json_decode(self.request.body)
+        device = session.query(Device).filter(Device.ident == data['ident']).first()
+        if not device:
+            device = Device(
+                ident=data['ident'],
+                date_updated=datetime.utcnow(),
+                date_created=datetime.utcnow()
+            )
+            session.add(device)
+        date = data.get('date')
+        if date:
+            date = dateutil.parser.parse(date)
+        if not date:
+            date = datetime.now()
+        device.date_seen = datetime.utcnow()
+
+        if not data.get('event_type'):
+            self.write({"status":"error","message":"you need to have an event type"})
+            return
+
+        log = DeviceLog(
+            device_id=device.id,
+            date=date,
+            type=data['event_type'])
+        del data['ident']
+        del data['date']
+        del data['event_type']
+        log.content=tornado.escape.json_encode(data)
+        session.add(log)
+        session.commit()
+        self.write({"status": "ok"})
+
 
 application = tornado.web.Application(
 # Paths
-   [   
+    [
        (r"/device/([0-9]+)", DeviceById),
+       (r"/device/event", DeviceEvent),
        (r"/devices", Devices),
-       (r"/version", VersionHandler),
        (r"/", Index),
        (r"/device/register", DeviceRegister),
        (r"/about", About)
-   ],
+    ],
 # Config
     debug=True,
     static_path=os.path.join(os.path.dirname(__file__), "static"),
