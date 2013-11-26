@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <h1>{% block title %}{% end %}</h1>
+{% end %}
+
+{% block content %}
+{% end %}
+
