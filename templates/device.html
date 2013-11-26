@@ -1,48 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
-<p>
-    Information about a device:
-    <table class="table table-striped">
+
+<h3>Device main information</h3>
+<table class="table table-striped">
+    <tr>
+        <td>
+            Ident
+        </td>
+        <td>
+            {{ device.ident }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Type
+        </td>
+        <td>
+            {{ device.type }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Creation
+        </td>
+        <td>
+            {{ device.date_created }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Updated
+        </td>
+        <td>
+            {{ device.date_updated }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Last seen
+        </td>
+        <td>
+            {{ device.date_seen }}
+        </td>
+    </tr>
+</table>
+{% if properties %}
+<h3>Properties</h3>
+<table class="table table-striped">
+    <thead>
         <tr>
-            <td>
-                Ident
-            </td>
-            <td>
-                {{ device.ident }}
-            </td>
+            <th>Name</th>
+            <th>Value</th>
         </tr>
+    </thead>
+    <tbody>
+    {% for prop in properties %}
         <tr>
-            <td>
-                Type
-            </td>
-            <td>
-                {{ device.type }}
-            </td>
+            <td>{{ prop.name }}</td>
+            <td>{{ prop.value }}</td>
         </tr>
-        <tr>
-            <td>
-                Creation
-            </td>
-            <td>
-                {{ device.date_created }}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Updated
-            </td>
-            <td>
-                {{ device.date_updated }}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Last seen
-            </td>
-            <td>
-                {{ device.date_seen }}
-            </td>
-        </tr>
-    </table>
-</p>
+    {% end %}
+    </tbody>
+</table>
+{% end %}
 {% end %}

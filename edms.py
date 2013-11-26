@@ -108,12 +108,15 @@ def get_or_create_device(ident):
             date_created=datetime.utcnow()
         )
     session.add(device)
+    return device
+
 
 class DeviceById(tornado.web.RequestHandler):
     def get(self, id):
         device = session.query(Device).filter(Device.id == int(id)).first()
         if device:
-            self.render("device.html", title=_("Device"), device=device)
+            properties = session.query(DeviceProperty).filter(DeviceProperty.device_id == device.id).all()
+            self.render("device.html", title=_("Device"), device=device, properties=properties)
         else:
             self.render("404.html", title=_("Device not found"))
 
@@ -123,6 +126,7 @@ class Devices(tornado.web.RequestHandler):
         devices = session.query(Device).all()
 
         self.render("devices.html", title=_("Devices"), devices=devices)
+
 
 class Index(tornado.web.RequestHandler):
     def get(self):
@@ -152,10 +156,11 @@ class DeviceProperties(tornado.web.RequestHandler):
         device = get_or_create_device(data['ident'])
         del data['ident']
         if device:
-            for name, value in data:
-                session.add(DeviceProperty(name, value))
+            for name, value in data.iteritems():
+                session.merge(DeviceProperty(device_id=device.id,name=name, value=value))
 
         session.commit()
+        self.write({"status": "ok"})
 
 
 class DeviceEvent(tornado.web.RequestHandler):
