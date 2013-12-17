@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import dateutil.parser
+from sqlalchemy.exc import IntegrityError
 import tornado.escape
 import tornado.ioloop
 import tornado.web
@@ -74,16 +75,25 @@ Index("device_properties_name_value", DeviceProperty.name, DeviceProperty.value)
 
 class DevicePropertyHistory(Base):
     __tablename__ = "device_properties_history"
+#    __table_args__ = ( # This is ugly
+#            UniqueConstraint(
+#                "device_id",
+#                "name",
+#                "date"
+#            ),
+#        )
     id = Column(Integer, primary_key=True)
     device_id = Column(Integer)
     name = Column(String)
     date = Column(DateTime)
     value = Column(String)
 
-Index("device_properties_history_id_name_value",
-      DevicePropertyHistory.id,
-      DevicePropertyHistory.name,
-      DevicePropertyHistory.value)
+Index(
+    "device_properties_history_id_name_date",
+    DevicePropertyHistory.device_id,
+    DevicePropertyHistory.name,
+    DevicePropertyHistory.date,
+    unique=True)
 
 
 Base.metadata.create_all(engine)
@@ -104,7 +114,7 @@ def conf_set(name, value):
         if not conf:
             conf = Config(name=name)
             session.add(conf)
-        conf.value=value
+        conf.value = value
         session.commit()
 
 nbLaunches = conf_get("nb_launches")
@@ -129,12 +139,14 @@ def get_or_create_device(ident):
 
 class DeviceById(tornado.web.RequestHandler):
     def get(self, id):
-        device = session.query(Device).filter(Device.id == int(id)).first()
+        device = session.query(Device).filter(Device.ident == id).first()
+        if not device:
+            device = session.query(Device).filter(Device.id == int(id)).first()
         if device:
             properties = session.query(DeviceProperty).filter(DeviceProperty.device_id == device.id).all()
             self.render("device.html", title=_("Device"), device=device, properties=properties)
         else:
-            self.render("404.html", title=_("Device not found"))
+            self.render("error.html", title=_("Device not found"), error=_("Device was not found"))
 
 
 class Devices(tornado.web.RequestHandler):
@@ -216,16 +228,35 @@ class DeviceEvent(tornado.web.RequestHandler):
 
 class DeviceReport(tornado.web.RequestHandler):
     def post(self):
-        conf_possibl_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
+        conf_possible_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
         data = tornado.escape.json_decode(self.request.body)
 
         ident = None
 
-        for name in conf_possibl_ident:
+        for name in conf_possible_ident:
             value = data.get(name)
             if value:
                 ident = name+":"+value
                 break
+
+        date = data.get('date')
+        if not date:
+            self.write_error(
+                503,
+                {
+                    "status": "error",
+                    "message": "No date specified"
+                }
+            )
+        date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
+        if not date:
+            self.write_error(
+                503,
+                {
+                    "status": "error",
+                    "message": "Incorrect date format"
+                }
+            )
 
         if not ident:
             self.write_error(
@@ -233,22 +264,49 @@ class DeviceReport(tornado.web.RequestHandler):
                 {
                     "status": "error",
                     "message": "No identifier could be found",
-                    "possible identifiers": conf_possibl_ident
+                    "possible identifiers": conf_possible_ident
                 }
             )
             return
 
         device = get_or_create_device(ident)
-        device.date_updated = datetime.utcnow()
+        if date > device.date_seen:
+            device.date_seen = date
 
         session.commit()
 
-        for name, value in data.iteritems():
-            session.merge(DeviceProperty(device_id=device.id, name=name, value=tornado.escape.json_encode(value)))
+        changes = False
+
+        try:
+            for name, value in data.iteritems():
+                value = tornado.escape.json_encode(value)
+                # We check if the value isn't already stored (not doing so
+                previous = session.query(DevicePropertyHistory).filter(
+                    DevicePropertyHistory.device_id == device.id,
+                    DevicePropertyHistory.name == name,
+                    DevicePropertyHistory.date == date).first()
+                if not previous: # If not, we store it
+                    changes = True
+                    session.merge(DevicePropertyHistory(device_id=device.id, name=name, date=date, value=value))
+
+                # We only take the last value as the current one
+                last = session.query(DevicePropertyHistory).filter(
+                    DevicePropertyHistory.device_id == device.id,
+                    DevicePropertyHistory.name == name,
+                    DevicePropertyHistory.date == date).order_by(DevicePropertyHistory.date.desc()).first()
+                session.merge(DeviceProperty(device_id=last.device_id, name=last.name, value=last.value))
+        except IntegrityError:
+            session.rollback()
+
+        if changes and date > device.date_updated:
+            device.date_updated = date
 
         session.commit()
 
-        self.write({"status": "ok"})
+        if changes:
+            self.write({"status": "ok"})
+        else:
+            self.write({"status": "ok", "already_sent": True})
 
     def get(self):
         self.render("error.html", title=_("Error"), error=_("This page can only be used in POST mode"))
@@ -277,7 +335,7 @@ class ConfigPage(tornado.web.RequestHandler):
 application = tornado.web.Application(
 # Paths
     [
-       (r"/device/([0-9]+)", DeviceById),
+       (r"/device/(.+)", DeviceById),
        (r"/device/event", DeviceEvent),
        (r"/devices", Devices),
        (r"/device/properties", DeviceProperties),
