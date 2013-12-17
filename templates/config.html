@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if param %}
+<h3>Parameter edition</h3>
+<form role="form" method="post">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{ param.name }}" {% if param.name %} disabled {% end %}>
+    </div>
+    <div class="form-group">
+        <label for="value">Value</label>
+        <input type="text" class="form-control" id="value" name="value" placeholder="Value" value="{{ param.value }}">
+    </div>
+    <button type="submit" class="btn btn-default">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        Save
+    </button>
+</form>
+{% end %}
+
+{% if parameters %}
+<h3>Parameters</h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for par in parameters %}
+    <tr>
+        <td>{{ par.name }}</td>
+        <td>{{ par.value }}</td>
+        <td>
+            <a href="/config/{{ par.name }}">
+                <button type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    Edit
+                </button>
+            </a>
+        </td>
+    </tr>
+    {% end %}
+    </tbody>
+</table>
+{% end %}
+<a href="/config/new">
+    <button type="button" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span>
+        Create
+    </button>
+</a>
+{% end %}

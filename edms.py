@@ -72,6 +72,20 @@ class DeviceProperty(Base):
 Index("device_properties_name_value", DeviceProperty.name, DeviceProperty.value)
 
 
+class DevicePropertyHistory(Base):
+    __tablename__ = "device_properties_history"
+    id = Column(Integer, primary_key=True)
+    device_id = Column(Integer)
+    name = Column(String)
+    date = Column(DateTime)
+    value = Column(String)
+
+Index("device_properties_history_id_name_value",
+      DevicePropertyHistory.id,
+      DevicePropertyHistory.name,
+      DevicePropertyHistory.value)
+
+
 Base.metadata.create_all(engine)
 
 
@@ -198,6 +212,33 @@ class DeviceEvent(tornado.web.RequestHandler):
         self.write({"status": "ok"})
 
 
+class DeviceReport(tornado.web.RequestHandler):
+    def post(self):
+        data = tornado.escape.json_decode(self.request.body)
+        # I'll do this later
+        self.write({"status": "ok"})
+
+
+class ConfigPage(tornado.web.RequestHandler):
+    def get(self, name=None):
+        if name == u"new":
+            conf = Config()
+            conf.name = ""
+            conf.value = ""
+        elif name:
+            conf = session.query(Config).filter(Config.name == name).first()
+        else:
+            conf = None
+        parameters = session.query(Config).all()
+        self.render("config.html", title=_("Config"), parameters=parameters, param=conf)
+
+    def post(self, name=None):
+        name = self.get_argument("name", name)
+        value = self.get_argument("value")
+        conf_set(name, value)
+        parameters = session.query(Config).all()
+        self.render("config.html", title=_("Config"), parameters=parameters, param=None)
+
 application = tornado.web.Application(
 # Paths
     [
@@ -207,7 +248,10 @@ application = tornado.web.Application(
        (r"/device/properties", DeviceProperties),
        (r"/", Index),
        (r"/device/register", DeviceRegister),
-       (r"/about", About)
+       (r"/about", About),
+       (r"/report", DeviceReport),
+       (r"/config", ConfigPage),
+       (r"/config/(.+)", ConfigPage)
     ],
 # Config
     debug=True,

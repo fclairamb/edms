@@ -14,7 +14,7 @@
    {% for device in devices %}
       <tr onclick="document.location.href='/device/{{ device.id }}'">
           <td>{{ device.id }}</td>
-          <td>{{ device.ident }}</td>
+          <td><a href="/device/{{ device.id }}">{{ device.ident }}</a></td>
           <td>{{ device.type }}</td>
       </tr>
    {% end %}
