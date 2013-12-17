@@ -89,12 +89,14 @@ Index("device_properties_history_id_name_value",
 Base.metadata.create_all(engine)
 
 
-def conf_get(name):
+def conf_get(name, default=None):
         conf = session.query(Config).filter(Config.name == name).first()
         if conf:
             return conf.value
         else:
-            return None
+            if default:  # We can easily see the default values in the GUI this way
+                conf_set(name, default)
+            return default
 
 
 def conf_set(name, value):
@@ -171,7 +173,7 @@ class DeviceProperties(tornado.web.RequestHandler):
         del data['ident']
         if device:
             for name, value in data.iteritems():
-                session.merge(DeviceProperty(device_id=device.id,name=name, value=value))
+                session.merge(DeviceProperty(device_id=device.id, name=name, value=value))
 
         session.commit()
         self.write({"status": "ok"})
@@ -214,9 +216,42 @@ class DeviceEvent(tornado.web.RequestHandler):
 
 class DeviceReport(tornado.web.RequestHandler):
     def post(self):
+        conf_possibl_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
         data = tornado.escape.json_decode(self.request.body)
-        # I'll do this later
+
+        ident = None
+
+        for name in conf_possibl_ident:
+            value = data.get(name)
+            if value:
+                ident = name+":"+value
+                break
+
+        if not ident:
+            self.write_error(
+                503,
+                {
+                    "status": "error",
+                    "message": "No identifier could be found",
+                    "possible identifiers": conf_possibl_ident
+                }
+            )
+            return
+
+        device = get_or_create_device(ident)
+        device.date_updated = datetime.utcnow()
+
+        session.commit()
+
+        for name, value in data.iteritems():
+            session.merge(DeviceProperty(device_id=device.id, name=name, value=tornado.escape.json_encode(value)))
+
+        session.commit()
+
         self.write({"status": "ok"})
+
+    def get(self):
+        self.render("error.html", title=_("Error"), error=_("This page can only be used in POST mode"))
 
 
 class ConfigPage(tornado.web.RequestHandler):
