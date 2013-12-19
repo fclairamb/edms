@@ -9,7 +9,7 @@ import gettext
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
 _ = gettext.gettext
 
 # The idea of this management interface is simply to follow some devices. It's pretty much empty
@@ -51,6 +51,8 @@ class DeviceLog(Base):
     date = Column(DateTime)
     type = Column(String)
     content = Column(String)
+
+    device = relationship("Device", order_by=Device.id)
 
     def __repr__(self):
         return "DeviceLog<id={id},device_id={device_id},date={date},type={type},content={content}>".format(
@@ -150,9 +152,14 @@ class DeviceById(tornado.web.RequestHandler):
         if not device:
             device = session.query(Device).filter(Device.id == int(id)).first()
         if device:
-            properties = session.query(DeviceProperty).filter(DeviceProperty.device_id == device.id).order_by(DeviceProperty.name).all()
-            logs = session.query(DeviceLog).filter(DeviceLog.device_id==device.id).order_by(DeviceLog.date.desc()).all()
-            self.render("device.html", title=_("Device"), device=device, properties=properties, logs=logs)
+            properties = session.query(DeviceProperty)\
+                .filter(DeviceProperty.device_id == device.id)\
+                .order_by(DeviceProperty.name)\
+                .all()
+            logs = session.query(DeviceLog).filter(DeviceLog.device_id == device.id)\
+                .order_by(DeviceLog.date.desc())\
+                .all()
+            self.render("device.html", title=_("Device ")+device.ident, device=device, properties=properties, logs=logs)
         else:
             self.render("error.html", title=_("Device not found"), error=_("Device was not found"))
 
@@ -248,6 +255,7 @@ class DeviceReport(tornado.web.RequestHandler):
                 break
 
         date = data.get('date')
+        type = data.get('type')
         if not date:
             self.set_status(400)
             self.write(
@@ -257,6 +265,8 @@ class DeviceReport(tornado.web.RequestHandler):
                 }
             )
             return
+
+        del data['date']
 
         date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
         if not date:
@@ -279,6 +289,9 @@ class DeviceReport(tornado.web.RequestHandler):
                 }
             )
             return
+
+        if type:
+            del data['type']
 
         device = get_or_create_device(ident)
         if not device.date_seen or date > device.date_seen:
@@ -314,8 +327,6 @@ class DeviceReport(tornado.web.RequestHandler):
 
         session.commit()
 
-        type = data['type']
-
         if type:
             log = DeviceLog()
             log.device_id = device.id
@@ -330,8 +341,6 @@ class DeviceReport(tornado.web.RequestHandler):
 
             if not previous:
                 changes = True
-                del data['date']
-                del data['type']
                 log.content = tornado.escape.json_encode(data)
                 session.add(log)
                 session.commit()
@@ -365,6 +374,28 @@ class ConfigPage(tornado.web.RequestHandler):
         parameters = session.query(Config).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=None)
 
+
+class LastReports(tornado.web.RequestHandler):
+    def get(self, type=None):
+        reports = session.query(DeviceLog).order_by(DeviceLog.date.desc())
+        if type:
+            reports = reports.filter(DeviceLog.type == type)
+        reports = reports.limit(100)
+        self.render("last_reports.html", title=_("Last reports"), reports=reports)
+
+
+class ShowReport(tornado.web.RequestHandler):
+    def get(self, reportId):
+        report = session.query(DeviceLog).filter(DeviceLog.id == reportId).first()
+        if report:
+            properties = session.query(DevicePropertyHistory).filter(
+                DevicePropertyHistory.device_id == report.device_id,
+                DevicePropertyHistory.date == report.date
+            ).all()
+            self.render("report.html", title=_("Report"), report=report, properties=properties)
+        else:
+            self.render("error.html", title=_("Error"), error=_("Report could not be found"))
+
 application = tornado.web.Application(
 # Paths
     [
@@ -376,6 +407,9 @@ application = tornado.web.Application(
        (r"/device/register", DeviceRegister),
        (r"/about", About),
        (r"/report", DeviceReport),
+       (r"/report/([0-9]+)", ShowReport),
+       (r"/last-reports", LastReports),
+       (r"/last-reports/(.+)", LastReports),
        (r"/config", ConfigPage),
        (r"/config/(.+)", ConfigPage)
     ],

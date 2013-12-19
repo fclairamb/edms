@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<p>
+
+<h3>Report information</h3>
+<table class="table table-striped">
+    <tr>
+        <td>
+            Device
+        </td>
+        <td>
+            <a href="/device/{{ report.device.ident }}">{{ report.device.ident }}</a> (last seen {{ report.device.date_seen }})
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Type of report
+        </td>
+        <td>
+            {{ report.type }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Date
+        </td>
+        <td>
+            {{ report.date }}
+        </td>
+    </tr>
+</table>
+
+
+<h3>Properties</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for prop in properties %}
+        <tr>
+            <td>{{ prop.name }}</td>
+            <td>{{ prop.value }}</td>
+        </tr>
+        {% end %}
+        </tbody>
+    </table>
+</p>
+{% end %}
