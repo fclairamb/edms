@@ -61,6 +61,13 @@ class DeviceLog(Base):
             content=self.content
         )
 
+Index(
+    "device_logs_device_id_date_type",
+    DeviceLog.device_id,
+    DeviceLog.date,
+    DeviceLog.type,
+    unique=True)
+
 
 class DeviceProperty(Base):
     __tablename__ = "device_properties"
@@ -143,8 +150,9 @@ class DeviceById(tornado.web.RequestHandler):
         if not device:
             device = session.query(Device).filter(Device.id == int(id)).first()
         if device:
-            properties = session.query(DeviceProperty).filter(DeviceProperty.device_id == device.id).all()
-            self.render("device.html", title=_("Device"), device=device, properties=properties)
+            properties = session.query(DeviceProperty).filter(DeviceProperty.device_id == device.id).order_by(DeviceProperty.name).all()
+            logs = session.query(DeviceLog).filter(DeviceLog.device_id==device.id).order_by(DeviceLog.date.desc()).all()
+            self.render("device.html", title=_("Device"), device=device, properties=properties, logs=logs)
         else:
             self.render("error.html", title=_("Device not found"), error=_("Device was not found"))
 
@@ -241,26 +249,29 @@ class DeviceReport(tornado.web.RequestHandler):
 
         date = data.get('date')
         if not date:
-            self.write_error(
-                503,
+            self.set_status(400)
+            self.write(
                 {
                     "status": "error",
                     "message": "No date specified"
                 }
             )
+            return
+
         date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
         if not date:
-            self.write_error(
-                503,
+            self.set_status(400)
+            self.write(
                 {
                     "status": "error",
                     "message": "Incorrect date format"
                 }
             )
+            return
 
         if not ident:
-            self.write_error(
-                503,
+            self.set_status(400)
+            self.write(
                 {
                     "status": "error",
                     "message": "No identifier could be found",
@@ -270,7 +281,7 @@ class DeviceReport(tornado.web.RequestHandler):
             return
 
         device = get_or_create_device(ident)
-        if date > device.date_seen:
+        if not device.date_seen or date > device.date_seen:
             device.date_seen = date
 
         session.commit()
@@ -302,6 +313,28 @@ class DeviceReport(tornado.web.RequestHandler):
             device.date_updated = date
 
         session.commit()
+
+        type = data['type']
+
+        if type:
+            log = DeviceLog()
+            log.device_id = device.id
+            log.date = date
+            log.type = type
+
+            previous = session.query(DeviceLog).filter(
+                DeviceLog.device_id == log.device_id,
+                DeviceLog.type == log.type,
+                DeviceLog.date == log.date
+            ).first()
+
+            if not previous:
+                changes = True
+                del data['date']
+                del data['type']
+                log.content = tornado.escape.json_encode(data)
+                session.add(log)
+                session.commit()
 
         if changes:
             self.write({"status": "ok"})
