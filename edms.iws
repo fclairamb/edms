@@ -2,24 +2,134 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8eb9d86-fef3-41e8-9225-1a5f159c4005" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_properties.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.db" afterPath="$PROJECT_DIR$/main.db" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/device.html" afterPath="$PROJECT_DIR$/templates/device.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/About.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Config.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Device hostname xps.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Devices.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Groups.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Last reports.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Report.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quick-look/Users.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/auth.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_report.go" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_report.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requests/device_report.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/groups.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/users.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.db" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/quick-look/sc1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/quick-look/sc2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/quick-look/sqlite.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/requests/device_properties.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/requests/device_register.sh" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/about.html" afterPath="$PROJECT_DIR$/templates/about.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/base.html" afterPath="$PROJECT_DIR$/templates/base.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/edms.iws" afterPath="$PROJECT_DIR$/edms.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/edms.py" afterPath="$PROJECT_DIR$/edms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="$PROJECT_DIR$/templates/home.html" />
     </list>
     <ignored path="edms.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/base.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385428627856" ignored="false" />
-    <file path="/edms.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385509464851" ignored="false" />
-    <file path="/about.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385429510863" ignored="false" />
-    <file path="/Dummy.txt" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385494486081" ignored="false" />
+    <file path="/base.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388582982622" ignored="false" />
+    <file path="/edms.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388588518388" ignored="false" />
+    <file path="/about.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388578820268" ignored="false" />
+    <file path="/Dummy.txt" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388589523445" ignored="false" />
     <file path="/query.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385426863764" ignored="false" />
-    <file path="/fragment.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385427704212" ignored="false" />
-    <file path="/device.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385509763182" ignored="false" />
-    <file path="/devices.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385429588651" ignored="false" />
-    <file path="/home.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385429479305" ignored="false" />
-    <file path="/device_properties.sh" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385508577306" ignored="false" />
+    <file path="/fragment.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388495674511" ignored="false" />
+    <file path="/device.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387430739315" ignored="false" />
+    <file path="/devices.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387318867461" ignored="false" />
+    <file path="/home.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388579425273" ignored="false" />
+    <file path="/device_properties.sh" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515354501" ignored="false" />
+    <file path="$PROJECT_DIR$/../nodejs/3.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515343763" ignored="false" />
+    <file path="$PROJECT_DIR$/../nodejs/2.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515597802" ignored="false" />
+    <file path="/2.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515590046" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/app.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515894168" ignored="false" />
+    <file path="/app.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385515888637" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/views/base.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596202254" ignored="false" />
+    <file path="/index.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596132545" ignored="false" />
+    <file path="/base.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596161739" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/routes/user.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385516305802" ignored="false" />
+    <file path="/user.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385516303761" ignored="false" />
+    <file path="$PROJECT_DIR$/../nodejs/5.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385583622083" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/views/index.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596133932" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/views/header.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596168878" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/views/footer.ejs" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385594466266" ignored="false" />
+    <file path="$PROJECT_DIR$/../untitled/node-express/routes/index.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596193191" ignored="false" />
+    <file path="/index.js" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385596191138" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/emails/EmailReceptionHandler.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385853452339" ignored="false" />
+    <file path="/EmailReceptionHandler.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385851955940" ignored="false" />
+    <file path="/Image.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385853036058" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/Image.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385853041595" ignored="false" />
+    <file path="/ImageCatAbs.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385852068082" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/ImageCatAbs.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385853452339" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/events/EventImageTagged.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385852569213" ignored="false" />
+    <file path="/EventImageTagged.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385852478281" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/events/EventImageAddedToSet.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385852983345" ignored="false" />
+    <file path="/EventImageAddedToSet.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385852981235" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/thyimg.iws" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385982201105" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/python-client/thyimg-cli.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917430377" ignored="false" />
+    <file path="/thyimg-cli.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385863915440" ignored="false" />
+    <file path="$USER_HOME$/Documents/lbc_alert/lbca.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385919864801" ignored="false" />
+    <file path="/lbca.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385919864801" ignored="false" />
+    <file path="/Python Console" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385919901925" ignored="false" />
+    <file path="/Event.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385933617523" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/events/Event.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385933618260" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/pages/PageLogin.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917430377" ignored="false" />
+    <file path="/PageLogin.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917192336" ignored="false" />
+    <file path="/a.dummy" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930658612" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/pages/PageEvents.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385932443097" ignored="false" />
+    <file path="/PageEvents.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385916873861" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/python-client/thyimg-python-client.iws" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385982201105" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/pages/PageTalks.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917798469" ignored="false" />
+    <file path="/PageTalks.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917770447" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/Forum.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917903434" ignored="false" />
+    <file path="/Forum.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917974295" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/TalksForum.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385918015257" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/TalksMessage.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385917925244" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/TalksTopic.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385918009544" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/resources/changelog.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385918605967" ignored="false" />
+    <file path="/changelog.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385918603919" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/rendering/Markdown.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385931335156" ignored="false" />
+    <file path="/Markdown.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930903414" ignored="false" />
+    <file path="/SimpleSearchToQuery.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385929280108" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/esrequests/SimpleSearchToQuery.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385929298199" ignored="false" />
+    <file path="/CommentRendering.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385929570640" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/rendering/CommentRendering.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385929582952" ignored="false" />
+    <file path="/Comment.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385929869503" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/Comment.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930432359" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/dao/UserThy.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930432359" ignored="false" />
+    <file path="/UserThy.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930352079" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/pages/PageFeatureRequests.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930838308" ignored="false" />
+    <file path="$USER_HOME$/Documents/m2mp-server/org.m2mp.db/src/main/java/org/m2mp/db/common/Entity.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930558890" ignored="false" />
+    <file path="/Entity.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930557381" ignored="false" />
+    <file path="/PageFeatureRequests.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930627223" ignored="false" />
+    <file path="/PageMyNotes.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930805815" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/pages/PageMyNotes.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385930838308" ignored="false" />
+    <file path="/EventImageCommented.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385934084177" ignored="false" />
+    <file path="$USER_HOME$/Documents/svn_WI/webdev/thyimg/src/main/java/com/webingenia/thyimg/events/EventImageCommented.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385934388502" ignored="false" />
+    <file path="$USER_HOME$/Documents/m2mp-server/org.m2mp.db/src/main/java/org/m2mp/db/ts/TimedDataWrapper.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385934052361" ignored="false" />
+    <file path="/TimedDataWrapper.java" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1385934043617" ignored="false" />
+    <file path="$USER_HOME$/Documents/GMX/scripts/init_pc_for_sk.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1386586039851" ignored="false" />
+    <file path="/init_pc_for_sk.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1386585989507" ignored="false" />
+    <file path="$PROJECT_DIR$/../../GMX/rki_svn/trunk/bluetooth_install/install.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387385147524" ignored="false" />
+    <file path="/install.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387381381616" ignored="false" />
+    <file path="$PROJECT_DIR$/../../GMX/rki_svn/trunk/bluetooth_install/mac_nb" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1386940233220" ignored="false" />
+    <file path="$PROJECT_DIR$/../../GMX/rki_svn/trunk/bluetooth_install/mac_addresses.csv" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1386947383840" ignored="false" />
+    <file path="$PROJECT_DIR$/../../GMX/rki_svn/trunk/bluetooth_install/runme_20131213.bat" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1386947409604" ignored="false" />
+    <file path="/config.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387309505804" ignored="false" />
+    <file path="/pydevd.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387310039484" ignored="false" />
+    <file path="/error.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387310204206" ignored="false" />
+    <file path="$PROJECT_DIR$/../../GMX/rki_svn/trunk/bluetooth_install/define_mac.keyr" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387382262557" ignored="false" />
+    <file path="/last_reports.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387432728610" ignored="false" />
+    <file path="/report.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387432231454" ignored="false" />
+    <file path="/groups.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388577143656" ignored="false" />
+    <file path="/send_reports.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1387560606753" ignored="false" />
+    <file path="/auth.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388585932671" ignored="false" />
+    <file path="/device_report.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388588461926" ignored="false" />
+    <file path="/device_report.sh" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388588309881" ignored="false" />
+    <file path="/device_report.go" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388578129481" ignored="false" />
+    <file path="/schema.py" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388582524823" ignored="false" />
+    <file path="/users.html" changelist="c8eb9d86-fef3-41e8-9225-1a5f159c4005" time="1388586683917" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +137,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -34,7 +149,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -50,8 +164,8 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -67,10 +181,11 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -80,13 +195,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="edms.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="edms.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/edms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="75" selection-start="3230" selection-end="3230" vertical-scroll-proportion="0.0">
+            <state line="349" column="29" selection-start="10276" selection-end="10276" vertical-scroll-proportion="-4.6360855">
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="device_report.sh" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requests/device_report.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="32" selection-start="160" selection-end="160" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -100,74 +224,58 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sqlite.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/quick-look/sqlite.txt">
+      <file leaf-file-name="device_report.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requests/device_report.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="0" selection-start="1158" selection-end="1158" vertical-scroll-proportion="0.0">
+            <state line="8" column="17" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="device_event.sh" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
+      <file leaf-file-name="users.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/users.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="218" selection-end="396" vertical-scroll-proportion="0.0">
+            <state line="19" column="41" selection-start="726" selection-end="726" vertical-scroll-proportion="-5.8163266">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="device_properties.sh" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requests/device_properties.sh">
+      <file leaf-file-name="schema.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///usr/share/pyshared/sqlalchemy/schema.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="2" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0">
+            <state line="1444" column="37" selection-start="59427" selection-end="59427" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edms.iws" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/edms.iws">
+      <file leaf-file-name="groups.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/groups.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="43" column="24" selection-start="1546" selection-end="1546" vertical-scroll-proportion="-17.5">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="device.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/device.html">
+      <file leaf-file-name="config.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/config.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="64" column="9" selection-start="1133" selection-end="1133" vertical-scroll-proportion="0.85675305">
+            <state line="34" column="31" selection-start="988" selection-end="988" vertical-scroll-proportion="-9.791667">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="devices.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/devices.html">
+      <file leaf-file-name="auth.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/auth.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="30" selection-start="262" selection-end="289" vertical-scroll-proportion="-8.125">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="6" selection-start="391" selection-end="391" vertical-scroll-proportion="-5.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="home.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/home.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="-0.625">
-              <folding />
+            <state line="9" column="45" selection-start="314" selection-end="314" vertical-scroll-proportion="-5.625">
+              <folding>
+                <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -190,16 +298,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="/usr/lib/python2.7/dist-packages/sqlalchemy/orm/query.py" />
-        <option value="$PROJECT_DIR$/templates/base.html" />
-        <option value="$PROJECT_DIR$/requests/device_event.sh" />
-        <option value="$PROJECT_DIR$/quick-look/schema.sql" />
-        <option value="$PROJECT_DIR$/templates/about.html" />
+        <option value="$PROJECT_DIR$/templates/report.html" />
+        <option value="$PROJECT_DIR$/templates/last_reports.html" />
         <option value="$PROJECT_DIR$/templates/devices.html" />
+        <option value="$PROJECT_DIR$/../../GMX/rki_svn/trunk/ra/scripts/send_reports.py" />
+        <option value="$PROJECT_DIR$/requests/device_report.c" />
+        <option value="$PROJECT_DIR$/templates/groups.html" />
+        <option value="$PROJECT_DIR$/requests/device_report.go" />
+        <option value="$PROJECT_DIR$/templates/about.html" />
         <option value="$PROJECT_DIR$/templates/home.html" />
-        <option value="$PROJECT_DIR$/requests/device_properties.sh" />
+        <option value="/usr/share/pyshared/sqlalchemy/schema.py" />
+        <option value="$PROJECT_DIR$/templates/base.html" />
+        <option value="$PROJECT_DIR$/templates/auth.html" />
+        <option value="$PROJECT_DIR$/templates/users.html" />
+        <option value="$PROJECT_DIR$/requests/device_report.sh" />
+        <option value="$PROJECT_DIR$/requests/device_report.py" />
         <option value="$PROJECT_DIR$/edms.py" />
-        <option value="$PROJECT_DIR$/templates/device.html" />
       </list>
     </option>
   </component>
@@ -235,6 +349,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -253,52 +369,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="requests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edms" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="quick-look" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -327,10 +399,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/quick-look" />
       <recent name="$PROJECT_DIR$/templates" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.edms">
+  <component name="RunManager" selected="Python.device_report">
     <configuration default="false" name="edms" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -345,6 +418,27 @@
       <module name="edms" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/edms.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PyDebugRunner" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PyDebugRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="device_report" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/requests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="edms" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/requests/device_report.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
@@ -510,12 +604,14 @@
       </JSDebuggerConfigurationSettings>
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Python.edms" />
+      <item index="1" class="java.lang.String" itemvalue="Python.device_report" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Python.edms" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Python.device_report" />
+        <item index="1" class="java.lang.String" itemvalue="Python.edms" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -560,7 +656,35 @@
       <created>1385432159028</created>
       <updated>1385432159028</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added properties rendering.">
+      <created>1385509830082</created>
+      <updated>1385509830082</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Sample properties.">
+      <created>1385509945667</created>
+      <updated>1385509945667</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added config management interface.">
+      <created>1387309683476</created>
+      <updated>1387309683476</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added basic properties handling of any JSON file containing at least a field that makes it identifiable.">
+      <created>1387312019247</created>
+      <updated>1387312019247</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added properties history.">
+      <created>1387319415158</created>
+      <updated>1387319415158</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added basic events handling.">
+      <created>1387429722778</created>
+      <updated>1387429722778</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Added some reports listing.&#10;&#10;The DB model is probably wrong.&#10;">
+      <created>1387432858842</created>
+      <updated>1387432858842</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -568,26 +692,26 @@
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24031007" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32848838" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31589147" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.7596899" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291262" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.68410856" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2497332" sideWeight="0.68410856" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275194" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291262" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -633,7 +757,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some files to show how it looks." />
+    <option name="LAST_COMMIT_MESSAGE" value="Quite some changes&#10;&#10;* DB changes (removed some plural + added few tables)&#10;* Added user authentication + management + access right check in all the pages&#10;* Added device group management&#10;* Added device association to a device group (but it is now visible yet)&#10;* Added some updated screenshots &#10;* Removed /device/register and /device/properties as they don't make much sense anymore&#10;* Added some sample client code so that we can easily embed it existing devices, factory installation units, etc." />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -650,10 +774,21 @@
     <MESSAGE value="Replacing sqlite3 by sqlalchimy seems like a good idea. And tornado template system is just magically working." />
     <MESSAGE value="Added DeviceLog. &#10;&#10;I wish I took the time to look at this earlier.&#10;&#10;And going to sleep..." />
     <MESSAGE value="Added some files to show how it looks." />
+    <MESSAGE value="Added properties rendering." />
+    <MESSAGE value="Sample properties." />
+    <MESSAGE value="Added config management interface." />
+    <MESSAGE value="Added basic properties handling of any JSON file containing at least a field that makes it identifiable." />
+    <MESSAGE value="Added properties history." />
+    <MESSAGE value="Added basic events handling." />
+    <MESSAGE value="Added some reports listing.&#10;&#10;The DB model is probably wrong.&#10;" />
+    <MESSAGE value="Quite some changes&#10;&#10;* DB changes (removed some plural + added few tables)&#10;* Added user authentication + management + access right check in all the pages&#10;* Added device group management&#10;* Added device association to a device group (but it is now visible yet)&#10;* Added some updated screenshots &#10;* Removed /device/register and /device/properties as they don't make much sense anymore&#10;* Added some sample client code so that we can easily embed it existing devices, factory installation units, etc." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="36" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -661,84 +796,70 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/lib/python2.7/dist-packages/sqlalchemy/orm/query.py">
+    <entry file="file://$PROJECT_DIR$/requests/device_report.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2281" column="23" selection-start="85802" selection-end="85802" vertical-scroll-proportion="0.62474436">
+        <state line="29" column="0" selection-start="496" selection-end="616" vertical-scroll-proportion="-16.73077">
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file:///usr/share/pyshared/tornado/web.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1047" column="32" selection-start="42189" selection-end="42189" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file:///usr/lib/python2.7/dist-packages/sqlalchemy/schema.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/socket.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="224" column="0" selection-start="7755" selection-end="7755" vertical-scroll-proportion="5.3840947" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/edms.ipr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="-0.625">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="6" selection-start="391" selection-end="391" vertical-scroll-proportion="-5.0">
+        <state line="2349" column="6" selection-start="92446" selection-end="92446" vertical-scroll-proportion="0.3328424">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/about.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="145" selection-end="145" vertical-scroll-proportion="-4.375">
+        <state line="33" column="92" selection-start="1248" selection-end="1248" vertical-scroll-proportion="0.5496183">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/quick-look/sqlite.txt">
+    <entry file="file://$PROJECT_DIR$/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="0" selection-start="1158" selection-end="1158" vertical-scroll-proportion="0.0">
+        <state line="9" column="0" selection-start="242" selection-end="242" vertical-scroll-proportion="-5.625">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
+    <entry file="file://$PROJECT_DIR$/templates/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="218" selection-end="396" vertical-scroll-proportion="0.0">
+        <state line="27" column="51" selection-start="1285" selection-end="1285" vertical-scroll-proportion="-9.791667">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requests/device_properties.sh">
+    <entry file="file:///usr/share/pyshared/sqlalchemy/engine/default.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="2" selection-start="183" selection-end="183" vertical-scroll-proportion="0.0">
+        <state line="323" column="0" selection-start="10961" selection-end="10961" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/edms.iws">
+    <entry file="file://$PROJECT_DIR$/templates/config.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="34" column="31" selection-start="988" selection-end="988" vertical-scroll-proportion="-9.791667">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/auth.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="45" selection-start="314" selection-end="314" vertical-scroll-proportion="-5.625">
+          <folding>
+            <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/users.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="41" selection-start="726" selection-end="726" vertical-scroll-proportion="-5.8163266">
           <folding />
         </state>
       </provider>
@@ -750,26 +871,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/share/pyshared/sqlalchemy/schema.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1444" column="37" selection-start="59427" selection-end="59427" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/groups.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="24" selection-start="1546" selection-end="1546" vertical-scroll-proportion="-17.5">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requests/device_report.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="32" selection-start="160" selection-end="160" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requests/device_report.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="17" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requests/device_event.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="573" selection-end="573" vertical-scroll-proportion="0.5301915">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/edms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="75" selection-start="3230" selection-end="3230" vertical-scroll-proportion="0.0">
+        <state line="349" column="29" selection-start="10276" selection-end="10276" vertical-scroll-proportion="-4.6360855">
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/devices.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="30" selection-start="262" selection-end="289" vertical-scroll-proportion="-8.125">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/device.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="9" selection-start="1133" selection-end="1133" vertical-scroll-proportion="0.85675305">
-          <folding />
         </state>
       </provider>
     </entry>

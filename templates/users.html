@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% end %}
+
+{% if current_user %}
+<h3>User modification</h3>
+<form role="form" method="post">
+    <div class="form-group">
+        <label for="username">Name</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username" {% if current_user.name %} value="{{ current_user.name }}" {% end %} />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+    </div>
+    <div class="form-group">
+        <label for="right">Rights</label>
+        <select id="right" name="right" class="form-control">
+            {% for k, v in current_user.RIGHTS.items() %}
+                <option value="{{ k }}" {% if k == current_user.right %}selected{% end %}>{{ v }}</option>
+            {% end %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-default">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        Save
+    </button>
+</form>
+{% end %}
+
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Rights</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td><a href="/user/{{ user.name }}">{{ user.name }}</td>
+        <td>
+            {{ user.RIGHTS[ user.right ] }}
+        </td>
+        <td>
+            <a href="?action=mod&id={{ user.id }}">
+                <button type="button" class="btn btn-info">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Edit
+                </button>
+            </a>
+        </td>
+    </tr>
+    {% end %}
+    </tbody>
+</table>
+<a href="?action=add">
+    <button type="button" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add
+    </button>
+</a>
+{% end %}

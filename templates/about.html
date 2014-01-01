@@ -4,4 +4,157 @@
         <p>
             This is an experimental devices management system.
         </p>
+        <h2>Goals</h2>
+        <ul>
+            <li>Store all properties around a given device</li>
+            <li>List all property changes around a given device</li>
+            <li>List all devices having some specific properties</li>
+            <li>Close to zero cost integration</li>
+        </ul>
+        <h2>Report format</h2>
+        <p>
+                The sent reports must have the following format:
+        </p>
+        <pre>{
+    "date":"2013-12-31 18:00:00.000000",
+    "type":"my_report_type",
+    "identifying_field":"identifying_value",
+    "field_1":"my_value_1",
+    "field_2","my_value_2"
+}</pre>
+        <p>
+            The field "identifying_field" must be in values (separated by commas) of
+            "<a href="/config/report_possible_ident_fields">report_possible_ident_fields</a>".
+        </p>
+        <p>
+            A report is made unique by its device identifier and its date. This is why the date has to be quite precise.
+        </p>
+        <h2>Sample reporting code</h2>
+        <p>
+            These are sample code to get you started. Usage of python is highly recommended.
+        </p>
+        <h3>Shell</h3>
+        <pre>curl http://localhost:8888/report -d "{
+  \"hostname\":\"`hostname`\",
+  \"date\":\"`date +%Y-%m-%d\ %H:%M:%S.%6N`\",
+  \"type\":\"hello_from_shell\",
+  \"loadavg\":\"`cat /proc/loadavg`\",
+  \"uname\":\"`uname -omr`\"
+}"</pre>
+        <h3>Python</h3>
+<pre>import json, urllib2, datetime, os, socket
+
+report = {
+    "hostname": socket.gethostname(),
+    "type": "hello_from_python",
+    "date": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'),
+    "loadavg": os.getloadavg()
+}
+
+urllib2.urlopen('http://localhost:8888/report', json.dumps(report))
+</pre>
+        <h3>Go</h3>
+<pre>package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"os"
+	"runtime"
+	"time"
+)
+
+func main() {
+	type MyReport struct {
+		Hostname   string `json:"hostname"`
+		Date       string `json:"date"`
+		ReportType string `json:"type"`
+		GoVersion  string `json:"go_version"`
+	}
+
+	now := time.Now().UTC()
+	hostname, _ := os.Hostname()
+	rep1 := MyReport{
+		hostname,
+		now.Format("2006-01-02 15:04:05.") + fmt.Sprintf("%d", (now.Nanosecond()/1e3)),
+		"hello_from_go",
+		runtime.Version(),
+	}
+
+	b, _ := json.Marshal(rep1)
+	_, err := http.Post("http://localhost:8888/report", "application/json", bytes.NewBuffer(b))
+
+	if err != nil {
+		fmt.Println("Could not send request:", err)
+		return
+	}
+}</pre>
+        <h3>C (GCC)</h3>
+        <pre>#ifdef SHELL
+gcc $0 -Wall -Werror -ljson -lcurl && ./a.out && rm a.out && exit 0
+#endif
+
+#include &lt;stdio.h&gt;
+#include &lt;memory.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;json-c/json.h&gt;
+#include &lt;curl/curl.h&gt;
+
+int main() {
+	json_object * report = json_object_new_object();
+	{ // We prepare the report object
+
+		{ // Hostname
+			char buffer[64];
+			gethostname(buffer, sizeof(buffer));
+			json_object_object_add(report, "hostname", json_object_new_string(buffer));
+		}
+
+		{ // Date
+			char buffer[64];
+			struct timeval tv;
+			struct tm *tm;
+
+			gettimeofday(&tv, NULL);
+			if ((tm = gmtime(&tv.tv_sec)) != NULL) {
+				char fmt[64];
+				strftime(fmt, sizeof (fmt), "%Y-%m-%d %H:%M:%S.%%06u", tm);
+				snprintf(buffer, sizeof (buffer), fmt, tv.tv_usec);
+			}
+
+			json_object_object_add(report, "date", json_object_new_string(buffer));
+		}
+
+		// Type
+		json_object_object_add( report, "type", json_object_new_string("hello_from_c"));
+
+		{ // Load
+			double load;
+			getloadavg( & load, 1 );
+			json_object_object_add( report, "loadavg", json_object_new_double(load));
+		}
+	}
+
+	// We convert the report to a json string
+	const char * json = json_object_to_json_string(report);
+
+	CURLcode res;
+	{ // We send the request
+		CURL * curl = curl_easy_init();
+		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8888/report");
+		curl_easy_setopt(curl, CURLOPT_POST, 1L);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(json));
+
+		res = curl_easy_perform(curl);
+
+		curl_easy_cleanup(curl);
+	}
+
+	return res;
+}</pre>
+        </ul>
 {% end %}

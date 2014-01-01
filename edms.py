@@ -1,19 +1,26 @@
 from datetime import date, datetime
 import dateutil.parser
+from mercurial.posix import username
 from sqlalchemy.exc import IntegrityError
 import tornado.escape
 import tornado.ioloop
 import tornado.web
 import os
+import re
 import gettext
 import sqlalchemy
+import hashlib
+import base64
+import uuid
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref
 _ = gettext.gettext
 
-# The idea of this management interface is simply to follow some devices. It's pretty much empty
-# but it can be easily extended.
+# Deb packages:
+# * python-dateutil
+# * python-sqlalchemy-ext
+# * python-tornado
 
 engine = sqlalchemy.create_engine('sqlite:///main.db', echo=True)
 
@@ -31,23 +38,37 @@ class Config(Base):
         return "Config<name={name},value={value}>".format(id=self.id, name=self.name)
 
 
+class DeviceGroup(Base):
+    __tablename__ = "device_group"
+    id = Column(Integer, primary_key=True)
+    parent_id = Column(Integer, ForeignKey("device_group.id"))
+    name = Column(String)
+    ident = Column(String, unique=True)
+    depth = Column(Integer)
+
+    parent = relationship("DeviceGroup", remote_side=[id])
+
+
 class Device(Base):
-    __tablename__ = "devices"
+    __tablename__ = "device"
     id = Column(Integer, primary_key=True)
     ident = Column(String)
     type = Column(String)
     date_created = Column(DateTime)
     date_updated = Column(DateTime)
     date_seen = Column(DateTime)
+    group_id = Column(Integer, ForeignKey('device_group.id'))
+
+    group = relationship("DeviceGroup", order_by=DeviceGroup.id)
 
     def __repr__(self):
         return "Device<ident={ident},type={type}>".format(id=self.id, name=self.name)
 
 
 class DeviceLog(Base):
-    __tablename__ = "device_logs"
+    __tablename__ = "device_log"
     id = Column(Integer, primary_key=True)
-    device_id = Column(Integer, ForeignKey('devices.id'))
+    device_id = Column(Integer, ForeignKey('device.id'))
     date = Column(DateTime)
     type = Column(String)
     content = Column(String)
@@ -64,15 +85,40 @@ class DeviceLog(Base):
         )
 
 Index(
-    "device_logs_device_id_date_type",
+    "device_log_device_id_date_type",
     DeviceLog.device_id,
     DeviceLog.date,
     DeviceLog.type,
     unique=True)
 
 
+class User(Base):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+    password = Column(String)
+    right = Column(Integer)
+
+    RIGHT_ACCESS = 1
+    RIGHT_ADMIN = 10
+    RIGHTS = {RIGHT_ACCESS: "Access", RIGHT_ADMIN: "Admin"}
+
+
+class DeviceConfig(Base):
+    __tablename__ = "device_config"
+    id = Column(Integer, primary_key=True)
+    device_id = Column(Integer, ForeignKey('device.id'))
+    name = Column(String),
+    value_set = Column(String),
+    date_set = Column(DateTime),
+    value_ack = Column(String),
+    date_ack = Column(DateTime)
+
+    device = relationship("Device", order_by=Device.id)
+
+
 class DeviceProperty(Base):
-    __tablename__ = "device_properties"
+    __tablename__ = "device_property"
     device_id = Column(Integer, primary_key=True)
     name = Column(String, primary_key=True)
     value = Column(String)
@@ -83,7 +129,7 @@ Index("device_properties_name_value", DeviceProperty.name, DeviceProperty.value)
 
 
 class DevicePropertyHistory(Base):
-    __tablename__ = "device_properties_history"
+    __tablename__ = "device_property_history"
 #    __table_args__ = ( # This is ugly
 #            UniqueConstraint(
 #                "device_id",
@@ -98,7 +144,7 @@ class DevicePropertyHistory(Base):
     value = Column(String)
 
 Index(
-    "device_properties_history_id_name_date",
+    "device_property_history_id_name_date",
     DevicePropertyHistory.device_id,
     DevicePropertyHistory.name,
     DevicePropertyHistory.date,
@@ -126,13 +172,6 @@ def conf_set(name, value):
         conf.value = value
         session.commit()
 
-nbLaunches = conf_get("nb_launches")
-if not nbLaunches:
-    nbLaunches = 1
-else:
-    nbLaunches = str( int(nbLaunches) + 1 )
-conf_set("nb_launches", nbLaunches)
-
 
 def get_or_create_device(ident):
     device = session.query(Device).filter(Device.ident == ident).first()
@@ -146,8 +185,30 @@ def get_or_create_device(ident):
     return device
 
 
-class DeviceById(tornado.web.RequestHandler):
+class SecureHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        userId = self.get_secure_cookie("user_id")
+        return session.query(User).filter(User.id == userId).first()
+
+    def has_right(self, right):
+        user = self.get_current_user()
+        if not user or user.right < right:
+            self.redirect('/login')
+            self.finish()  # We don't want anyone to continue writing the response
+            return False
+        else:
+            return True
+
+    def check_access_right(self):
+        return self.has_right(User.RIGHT_ACCESS)
+
+    def check_admin_right(self):
+        return self.has_right(User.RIGHT_ADMIN)
+
+
+class DeviceById(SecureHandler):
     def get(self, id):
+        self.check_access_right()
         device = session.query(Device).filter(Device.ident == id).first()
         if not device:
             device = session.query(Device).filter(Device.id == int(id)).first()
@@ -164,46 +225,21 @@ class DeviceById(tornado.web.RequestHandler):
             self.render("error.html", title=_("Device not found"), error=_("Device was not found"))
 
 
-class Devices(tornado.web.RequestHandler):
+class Devices(SecureHandler):
     def get(self):
+        self.check_access_right()
         devices = session.query(Device).all()
-
         self.render("devices.html", title=_("Devices"), devices=devices)
 
 
 class Index(tornado.web.RequestHandler):
     def get(self):
-        self.render("home.html", title=_("Welcome"))
+        self.render("home.html", title=_(""))
 
 
 class About(tornado.web.RequestHandler):
     def get(self):
         self.render("about.html", title=_("About"))
-
-
-class DeviceRegister(tornado.web.RequestHandler):
-    def post(self):
-        data = tornado.escape.json_decode(self.request.body)
-        device = get_or_create_device(data['ident'])
-        if not device.type and data.get('ident'):
-            device.type = data['ident']
-            device.date_updated = datetime.utcnow()
-        device.date_seen = datetime.utcnow()
-        session.commit()
-        self.write({"status": "ok", "device_id": device.id})
-
-
-class DeviceProperties(tornado.web.RequestHandler):
-    def post(self):
-        data = tornado.escape.json_decode(self.request.body)
-        device = get_or_create_device(data['ident'])
-        del data['ident']
-        if device:
-            for name, value in data.iteritems():
-                session.merge(DeviceProperty(device_id=device.id, name=name, value=value))
-
-        session.commit()
-        self.write({"status": "ok"})
 
 
 class DeviceEvent(tornado.web.RequestHandler):
@@ -297,10 +333,18 @@ class DeviceReport(tornado.web.RequestHandler):
         if not device.date_seen or date > device.date_seen:
             device.date_seen = date
 
+        # We will try to attach this device to a group of devices
+        conf_possible_group = conf_get("report_possible_device_group_field", "device_group")
+        group_ident = data.get(conf_possible_group)
+        if group_ident:
+            group = session.query(DeviceGroup).filter(DeviceGroup.ident == group_ident).first()
+            device.group_id = group.id
+
         session.commit()
 
         changes = False
 
+        # We update these report properties in the device properties
         try:
             for name, value in data.iteritems():
                 value = tornado.escape.json_encode(value)
@@ -354,29 +398,33 @@ class DeviceReport(tornado.web.RequestHandler):
         self.render("error.html", title=_("Error"), error=_("This page can only be used in POST mode"))
 
 
-class ConfigPage(tornado.web.RequestHandler):
+class ConfigPage(SecureHandler):
     def get(self, name=None):
+        self.check_access_right()
         if name == u"new":
             conf = Config()
             conf.name = ""
             conf.value = ""
         elif name:
-            conf = session.query(Config).filter(Config.name == name).first()
+            conf = session.query(Config).filter(Config.name == name, Config.name.notlike('.%')).first()
         else:
             conf = None
-        parameters = session.query(Config).all()
+        parameters = session.query(Config).filter(Config.name.notlike('.%')).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=conf)
 
     def post(self, name=None):
+        if not self.check_admin_right():
+            return
         name = self.get_argument("name", name)
         value = self.get_argument("value")
         conf_set(name, value)
-        parameters = session.query(Config).all()
+        parameters = session.query(Config).filter(Config.name.notlike('.%')).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=None)
 
 
-class LastReports(tornado.web.RequestHandler):
+class LastReports(SecureHandler):
     def get(self, type=None):
+        self.check_access_right()
         reports = session.query(DeviceLog).order_by(DeviceLog.date.desc())
         if type:
             reports = reports.filter(DeviceLog.type == type)
@@ -384,8 +432,9 @@ class LastReports(tornado.web.RequestHandler):
         self.render("last_reports.html", title=_("Last reports"), reports=reports)
 
 
-class ShowReport(tornado.web.RequestHandler):
+class ShowReport(SecureHandler):
     def get(self, reportId):
+        self.check_access_right()
         report = session.query(DeviceLog).filter(DeviceLog.id == reportId).first()
         if report:
             properties = session.query(DevicePropertyHistory).filter(
@@ -396,31 +445,168 @@ class ShowReport(tornado.web.RequestHandler):
         else:
             self.render("error.html", title=_("Error"), error=_("Report could not be found"))
 
+
+class GroupsPage(SecureHandler):
+    def get(self):
+        self.check_access_right()
+        action = self.get_argument("action", None)
+
+        group = None
+        error = None
+
+        if action == "add" or action == 'mod':
+            if not self.check_admin_right():
+                return
+            name = self.get_argument("name", "")
+            if action == 'add':
+                group = DeviceGroup()
+                group.name = ""
+                group.ident = ""
+            else:
+                group = session.query(DeviceGroup).filter(DeviceGroup.id==int(self.get_argument("group_id"))).first()
+            if name:
+                group.name = name
+                group.parent_id = self.get_argument("parent_id", "")
+                group.ident = re.sub(r'\W+', '', self.get_argument("ident", ""))
+                if group.parent:
+                    group.depth = group.parent.depth + 1
+                else:
+                    group.depth = 0
+
+                try:
+                    session.merge(group)
+                    session.commit()
+                except IntegrityError as e:
+                    error = str(e)
+                    session.rollback()
+                group = None
+
+        groups = session.query(DeviceGroup).order_by(DeviceGroup.depth.desc(), DeviceGroup.name).all()
+
+        self.render("groups.html", title=_("Groups"), groups=groups, current_group=group, error=error)
+
+    def post(self):
+        self.get()
+
+
+class UsersPage(SecureHandler):
+    def get(self):
+        self.check_access_right()
+        action = self.get_argument("action", None)
+
+        user = None
+        error = None
+
+        if action == "add" or action == 'mod':
+            if not self.check_admin_right():
+                return
+            id = self.get_argument("id", "")
+            username = self.get_argument("username", "")
+            password = self.get_argument("password", "")
+            right = int(self.get_argument("right", "1"))
+            if action == 'add':
+                user = User()
+            else:
+                user = session.query(User).filter(User.id == int(id)).first()
+            if username:
+                user.name = username
+                user.right = right
+                if password or user.password:
+                    if password:
+                        user.password = hashlib.sha1(password).hexdigest()
+                    try:
+                        session.merge(user)
+                        session.commit()
+                        user = None
+                    except IntegrityError as e:
+                        error = str(e)
+                        session.rollback()
+                else:
+                    error = "You have to specify a password."
+
+        users = session.query(User).order_by(User.name).all()
+
+        self.render("users.html", title=_("Users"), current_user=user, users=users, error=error)
+
+    def post(self):
+        self.get()
+
+
+class Login(tornado.web.RequestHandler):
+    def get(self):
+        error = None
+        if bool(self.get_argument("logout", "false")):
+            self.set_secure_cookie("user_id", str(0))
+            user = None
+        else:
+            user = session.query(User).filter(
+                User.id == self.get_secure_cookie("user_id")
+            ).first()
+        self.render('auth.html', title=_("Authentication"), user=user, error=None)
+
+    def post(self):
+        error = None
+        user = session.query(User).filter(
+            User.name == self.get_argument("username", ""),
+            User.password == hashlib.sha1(self.get_argument("password", "")).hexdigest()
+        ).first()
+        if user:
+            self.set_secure_cookie("user_id", str(user.id))
+        else:
+            error = "Could not authenticate you"
+        self.render('auth.html', title=_("Authentication"), user=user, error=error)
+
+
 application = tornado.web.Application(
 # Paths
     [
-       (r"/device/(.+)", DeviceById),
-       (r"/device/event", DeviceEvent),
-       (r"/devices", Devices),
-       (r"/device/properties", DeviceProperties),
-       (r"/", Index),
-       (r"/device/register", DeviceRegister),
-       (r"/about", About),
-       (r"/report", DeviceReport),
-       (r"/report/([0-9]+)", ShowReport),
-       (r"/last-reports", LastReports),
-       (r"/last-reports/(.+)", LastReports),
-       (r"/config", ConfigPage),
-       (r"/config/(.+)", ConfigPage)
+        (r"/device/(.+)", DeviceById),
+        (r"/device/event", DeviceEvent),
+        (r"/devices", Devices),
+        (r"/", Index),
+        (r"/about", About),
+        (r"/report", DeviceReport),
+        (r"/report/([0-9]+)", ShowReport),
+        (r"/last-reports", LastReports),
+        (r"/last-reports/(.+)", LastReports),
+        (r"/config", ConfigPage),
+        (r"/config/(.+)", ConfigPage),
+        (r"/groups", GroupsPage),
+        (r"/users", UsersPage),
+        (r"/login", Login)
     ],
 # Config
     debug=True,
+    cookie_secret=conf_get('.cookie_secret', base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
     template_path=os.path.join(os.path.dirname(__file__), "templates")
 )
- 
+
+
+def launch_setup():
+    # We define the configuration of report_possible_ident_fields if it doesn't exist
+    conf_get("report_possible_ident_fields", "ident,hostname")
+    conf_get("report_possible_device_group_field", "device_group")
+
+    # We update the number of launches
+    nbLaunches = conf_get("nb_launches")
+    if not nbLaunches:
+        nbLaunches = 1
+    else:
+        nbLaunches = str(int(nbLaunches) + 1)
+    conf_set("nb_launches", nbLaunches)
+
+    # We check if we have a user "admin" and if not we create it:
+    user = session.query(User).filter(User.name == "admin").first()
+    if not user:
+        user = User(name="admin", password=hashlib.sha1("admin").hexdigest(), right=User.RIGHT_ADMIN)
+        session.add(user)
+        session.commit()
+        print("Created user \"admin\" with pass \"admin\".")
+
 if __name__ == "__main__":
     application.listen(8888)
-    print ("Ready !")
+    launch_setup()
+    print("Ready !")
     tornado.ioloop.IOLoop.instance().start()
 
