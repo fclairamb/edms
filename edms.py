@@ -30,6 +30,7 @@ session = Session()
 Base = declarative_base()
 
 class Config(Base):
+    """General configuration"""
     __tablename__ = "config"
     name = Column(String, primary_key=True)
     value = Column(String)
@@ -39,6 +40,7 @@ class Config(Base):
 
 
 class DeviceGroup(Base):
+    """Device group"""
     __tablename__ = "device_group"
     id = Column(Integer, primary_key=True)
     parent_id = Column(Integer, ForeignKey("device_group.id"))
@@ -50,6 +52,7 @@ class DeviceGroup(Base):
 
 
 class Device(Base):
+    """Device table"""
     __tablename__ = "device"
     id = Column(Integer, primary_key=True)
     ident = Column(String)
@@ -66,12 +69,14 @@ class Device(Base):
 
 
 class DeviceLog(Base):
+    """Device log"""
     __tablename__ = "device_log"
     id = Column(Integer, primary_key=True)
     device_id = Column(Integer, ForeignKey('device.id'))
     date = Column(DateTime)
     type = Column(String)
-    content = Column(String)
+    # We dont need to save the raw content of the report
+    # content = Column(String)
 
     device = relationship("Device", order_by=Device.id)
 
@@ -118,6 +123,7 @@ class DeviceConfig(Base):
 
 
 class DeviceProperty(Base):
+    """Last property for all devices."""
     __tablename__ = "device_property"
     device_id = Column(Integer, primary_key=True)
     name = Column(String, primary_key=True)
@@ -129,14 +135,8 @@ Index("device_properties_name_value", DeviceProperty.name, DeviceProperty.value)
 
 
 class DevicePropertyHistory(Base):
+    """Properties history for all devices."""
     __tablename__ = "device_property_history"
-#    __table_args__ = ( # This is ugly
-#            UniqueConstraint(
-#                "device_id",
-#                "name",
-#                "date"
-#            ),
-#        )
     id = Column(Integer, primary_key=True)
     device_id = Column(Integer)
     name = Column(String)
@@ -271,7 +271,8 @@ class DeviceEvent(tornado.web.RequestHandler):
         del data['ident']
         del data['date']
         del data['event_type']
-        log.content=tornado.escape.json_encode(data)
+        # We don't need to save the raw content
+        # log.content=tornado.escape.json_encode(data)
         session.add(log)
         session.commit()
         self.write({"status": "ok"})
@@ -338,7 +339,13 @@ class DeviceReport(tornado.web.RequestHandler):
         group_ident = data.get(conf_possible_group)
         if group_ident:
             group = session.query(DeviceGroup).filter(DeviceGroup.ident == group_ident).first()
-            device.group_id = group.id
+
+            if not group and bool(conf_get("device_group_auto_create", "false")):
+                group = DeviceGroup(name=group_ident, ident=group_ident)
+                session.add(group)
+
+            if group:
+                device.group_id = group.id
 
         session.commit()
 
@@ -587,6 +594,7 @@ def launch_setup():
     # We define the configuration of report_possible_ident_fields if it doesn't exist
     conf_get("report_possible_ident_fields", "ident,hostname")
     conf_get("report_possible_device_group_field", "device_group")
+    conf_get("device_group_auto_create", "false")
 
     # We update the number of launches
     nbLaunches = conf_get("nb_launches")
