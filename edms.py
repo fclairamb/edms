@@ -383,10 +383,10 @@ class ConfigPage(SecureHandler):
             conf.name = ""
             conf.value = ""
         elif name:
-            conf = session.query(Config).filter(Config.name == name, Config.name.notlike('.%')).first()
+            conf = session.query(Config).filter(Config.name == name, ~Config.name.startswith('.')).first()
         else:
             conf = None
-        parameters = session.query(Config).filter(Config.name.notlike('.%')).all()
+        parameters = session.query(Config).filter(~Config.name.startswith('.')).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=conf)
 
     def post(self, name=None):
@@ -395,7 +395,7 @@ class ConfigPage(SecureHandler):
         name = self.get_argument("name", name)
         value = self.get_argument("value")
         conf_set(name, value)
-        parameters = session.query(Config).filter(Config.name.notlike('.%')).all()
+        parameters = session.query(Config).filter(~Config.name.startswith('.')).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=None)
 
 
