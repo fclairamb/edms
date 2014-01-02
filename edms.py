@@ -1,6 +1,4 @@
-from datetime import date, datetime
-import dateutil.parser
-from mercurial.posix import username
+from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 import tornado.escape
 import tornado.ioloop
@@ -12,17 +10,25 @@ import sqlalchemy
 import hashlib
 import base64
 import uuid
+import argparse
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref
 _ = gettext.gettext
 
 # Deb packages:
-# * python-dateutil
-# * python-sqlalchemy-ext
+# *
+# * python-sqlalchemy
 # * python-tornado
 
-engine = sqlalchemy.create_engine('sqlite:///main.db', echo=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='EDMS')
+    parser.add_argument('--port', metavar='PORT', type=int, help='Server port', default=8888)
+    parser.add_argument('--sql', action='store_true', help='Show SQL requests')
+    parser.add_argument('--db', metavar="DB_FILE", help='Database file to use', default='main.db')
+    args = parser.parse_args()
+
+engine = sqlalchemy.create_engine('sqlite:///'+args.db, echo=args.sql)
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -113,10 +119,10 @@ class DeviceConfig(Base):
     __tablename__ = "device_config"
     id = Column(Integer, primary_key=True)
     device_id = Column(Integer, ForeignKey('device.id'))
-    name = Column(String),
-    value_set = Column(String),
-    date_set = Column(DateTime),
-    value_ack = Column(String),
+    name = Column(String)
+    value_set = Column(String)
+    date_set = Column(DateTime)
+    value_ack = Column(String)
     date_ack = Column(DateTime)
 
     device = relationship("Device", order_by=Device.id)
@@ -242,42 +248,6 @@ class About(tornado.web.RequestHandler):
         self.render("about.html", title=_("About"))
 
 
-class DeviceEvent(tornado.web.RequestHandler):
-    def post(self):
-        data = tornado.escape.json_decode(self.request.body)
-        device = session.query(Device).filter(Device.ident == data['ident']).first()
-        if not device:
-            device = Device(
-                ident=data['ident'],
-                date_updated=datetime.utcnow(),
-                date_created=datetime.utcnow()
-            )
-            session.add(device)
-        date = data.get('date')
-        if date:
-            date = dateutil.parser.parse(date)
-        if not date:
-            date = datetime.now()
-        device.date_seen = datetime.utcnow()
-
-        if not data.get('event_type'):
-            self.write({"status":"error","message":"you need to have an event type"})
-            return
-
-        log = DeviceLog(
-            device_id=device.id,
-            date=date,
-            type=data['event_type'])
-        del data['ident']
-        del data['date']
-        del data['event_type']
-        # We don't need to save the raw content
-        # log.content=tornado.escape.json_encode(data)
-        session.add(log)
-        session.commit()
-        self.write({"status": "ok"})
-
-
 class DeviceReport(tornado.web.RequestHandler):
     def post(self):
         conf_possible_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
@@ -360,7 +330,7 @@ class DeviceReport(tornado.web.RequestHandler):
                     DevicePropertyHistory.device_id == device.id,
                     DevicePropertyHistory.name == name,
                     DevicePropertyHistory.date == date).first()
-                if not previous: # If not, we store it
+                if not previous:  # If not, we store it
                     changes = True
                     session.merge(DevicePropertyHistory(device_id=device.id, name=name, date=date, value=value))
 
@@ -510,7 +480,7 @@ class UsersPage(SecureHandler):
             id = self.get_argument("id", "")
             username = self.get_argument("username", "")
             password = self.get_argument("password", "")
-            right = int(self.get_argument("right", "1"))
+            right = int(self.get_argument("right", str(User.RIGHT_ACCESS)))
             if action == 'add':
                 user = User()
             else:
@@ -565,10 +535,9 @@ class Login(tornado.web.RequestHandler):
 
 
 application = tornado.web.Application(
-# Paths
+    # Paths
     [
         (r"/device/(.+)", DeviceById),
-        (r"/device/event", DeviceEvent),
         (r"/devices", Devices),
         (r"/", Index),
         (r"/about", About),
@@ -582,7 +551,7 @@ application = tornado.web.Application(
         (r"/users", UsersPage),
         (r"/login", Login)
     ],
-# Config
+    # Config
     debug=True,
     cookie_secret=conf_get('.cookie_secret', base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -613,8 +582,8 @@ def launch_setup():
         print("Created user \"admin\" with pass \"admin\".")
 
 if __name__ == "__main__":
-    application.listen(8888)
+    application.listen(args.port)
     launch_setup()
-    print("Ready !")
+    print("Listening on {port}".format(port=args.port))
     tornado.ioloop.IOLoop.instance().start()
 

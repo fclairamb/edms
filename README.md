@@ -16,6 +16,21 @@ The main goal is to have a zero cost integration. Making a report is a simple as
     }
     urllib2.urlopen('http://localhost:8888/report', json.dumps(report))
 
+Installation
+------------
+On debian 7 (wheezy) :
+
+    apt-get install python-dateutil python-sqlalchemy python-tornado supervisor -y
+
+Then you just have to create a file in /etc/supervisor/conf.d/edms.conf with something like that:
+
+    [program:edms-8501]
+    command=python /usr/local/share/edms/edms.py --port=8501 --db /usr/lib/edms/main.db
+    stderr_logfile=/var/log/supervisor/edms-tornado-stderr.log
+    stdout_logfile=/var/log/supervisor/edms-tornado-stdout.log
+
+
+
 
 Screenshots
 -----------
