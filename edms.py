@@ -64,7 +64,6 @@ class Device(Base):
     __tablename__ = "device"
     id = Column(Integer, primary_key=True)
     ident = Column(String)
-    type = Column(String)
     date_created = Column(DateTime)
     date_updated = Column(DateTime)
     date_seen = Column(DateTime)
@@ -404,7 +403,7 @@ class ConfigPage(SecureHandler):
             conf = session.query(Config).filter(Config.name == name, ~Config.name.startswith('.')).first()
         else:
             conf = None
-        parameters = session.query(Config).filter(~Config.name.startswith('.')).all()
+        parameters = session.query(Config).filter(~Config.name.startswith('.')).order_by(Config.name).all()
         self.render("config.html", title=_("Config"), parameters=parameters, param=conf)
 
     def post(self, name=None):

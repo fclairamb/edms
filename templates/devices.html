@@ -7,7 +7,6 @@
    <tr>
        <th>Id</th>
        <th>Ident</th>
-       <th>Type</th>
    </tr>
    </thead>
    <tbody>
@@ -15,7 +14,6 @@
       <tr onclick="document.location.href='/device/{{ device.id }}'">
           <td><a href="/device/{{ device.id }}">{{ device.id }}</a></td>
           <td><a href="/device/{{ device.ident }}">{{ device.ident }}</a></td>
-          <td>{{ device.type }}</td>
       </tr>
    {% end %}
    </tbody>
