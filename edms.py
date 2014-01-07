@@ -35,6 +35,7 @@ session = Session()
 
 Base = declarative_base()
 
+
 class Config(Base):
     """General configuration"""
     __tablename__ = "config"
@@ -249,6 +250,19 @@ class About(tornado.web.RequestHandler):
         self.render("about.html", title=_("About"))
 
 
+def json_flatten(data):
+    if not isinstance(data, dict):
+        return data
+    sub = {}
+    for name, value in data.iteritems():
+        if isinstance(value, dict):
+            for vn, vv in value.iteritems():
+                sub[name+"."+vn] = json_flatten(vv)
+        else:
+            sub[name] = value
+    return sub
+
+
 class DeviceReport(tornado.web.RequestHandler):
     def post(self):
         conf_possible_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
@@ -321,6 +335,9 @@ class DeviceReport(tornado.web.RequestHandler):
         session.commit()
 
         changes = False
+
+        if bool(conf_get("report_json_flatten", "true")):
+            data = json_flatten(data)
 
         # We update these report properties in the device properties
         try:
@@ -593,9 +610,10 @@ application = tornado.web.Application(
 
 
 def launch_setup():
-    # We define the configuration of report_possible_ident_fields if it doesn't exist
+    # We define the default options
     conf_get("report_possible_ident_fields", "ident,hostname")
     conf_get("report_possible_device_group_field", "device_group")
+    conf_get("report_json_flatten", "true")
     conf_get("device_group_auto_create", "false")
 
     # We update the number of launches
