@@ -2,6 +2,7 @@
 {% block content %}
 <p>
    These are the last reports:
+</p>
 <table class="table table-striped table-hover">
     <thead>
     <tr>
@@ -22,5 +23,17 @@
     {% end %}
     </tbody>
 </table>
-</p>
+<ul class="pager">
+    {% if paging_previous %}
+    <li class="previous"><a href="{{ paging_previous }}">&larr; Previous</a></li>
+    {% else %}
+    <li class="previous disabled"><a href="#">&larr; Previous</a></li>
+    {% end %}
+
+    {% if paging_next %}
+    <li class="next"><a href="{{ paging_next }}">Next &rarr;</a></li>
+    {% else %}
+    <li class="next disabled"><a href="#>">Next &rarr;</a></li>
+    {% end %}
+</ul>
 {% end %}
