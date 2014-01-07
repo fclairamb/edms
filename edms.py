@@ -55,6 +55,7 @@ class DeviceGroup(Base):
     depth = Column(Integer)
 
     parent = relationship("DeviceGroup", remote_side=[id])
+    children = relationship("DeviceGroup", remote_side=parent_id)
 
 
 class Device(Base):
@@ -400,13 +401,45 @@ class ConfigPage(SecureHandler):
 
 
 class LastReports(SecureHandler):
+
+    def pagination(self, query, nb=40):
+        """Basic pagination"""
+        paging_from = self.get_argument("paging_to", None)
+        if paging_from:
+            query = query.filter(DeviceLog.id <= int(paging_from))
+
+        query = query.limit(nb+1).all()
+
+        link_previous = None
+        link_next = None
+        if len(query) > 1:
+            first = query[0]
+            last = query[len(query)-1]
+
+            link_previous = "?paging_to={id}".format(id=first.id+20)
+
+            if len(query) > nb:
+                query.pop()
+                link_next = "?paging_to={id}".format(id=last.id)
+            else:
+                link_next = None
+
+        return query, link_previous, link_next
+
     def get(self, type=None):
         self.check_access_right()
         reports = session.query(DeviceLog).order_by(DeviceLog.date.desc())
         if type:
             reports = reports.filter(DeviceLog.type == type)
-        reports = reports.limit(100)
-        self.render("last_reports.html", title=_("Last reports"), reports=reports)
+
+        reports, link_previous, link_next = self.pagination(reports)
+
+        self.render(
+            "last_reports.html",
+            title=_("Last reports"),
+            reports=reports,
+            paging_previous=link_previous, paging_next=link_next
+        )
 
 
 class ShowReport(SecureHandler):
