@@ -17,8 +17,8 @@
     <tr>
         <td><a href="/report/{{ report.id }}">{{ report.id }}</a></td>
         <td><a href="/report/{{ report.id }}">{{ report.date }}</a></td>
-        <td><a href="/device/{{ report.device.ident }}">{{ report.device.ident }}</a></td>
-        <td><a href="/last-reports/{{ report.type }}">{{ report.type }}</a></td>
+        <td><a href="/last-reports?device_id={{ report.device.id }}">{{ report.device.ident }}</a></td>
+        <td><a href="/last-reports?type={{ report.type }}">{{ report.type }}</a></td>
     </tr>
     {% end %}
     </tbody>

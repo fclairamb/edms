@@ -75,14 +75,14 @@ class Device(Base):
         return "Device<ident={ident},type={type}>".format(id=self.id, name=self.name)
 
 
-class DeviceLog(Base):
+class DeviceReport(Base):
     """Device log"""
-    __tablename__ = "device_log"
+    __tablename__ = "device_report"
     id = Column(Integer, primary_key=True)
     device_id = Column(Integer, ForeignKey('device.id'))
     date = Column(DateTime)
     type = Column(String)
-    # We dont need to save the raw content of the report
+    # We don't need to save the raw content of the report
     # content = Column(String)
 
     device = relationship("Device", order_by=Device.id)
@@ -98,9 +98,9 @@ class DeviceLog(Base):
 
 Index(
     "device_log_device_id_date_type",
-    DeviceLog.device_id,
-    DeviceLog.date,
-    DeviceLog.type,
+    DeviceReport.device_id,
+    DeviceReport.date,
+    DeviceReport.type,
     unique=True)
 
 
@@ -145,10 +145,14 @@ class DevicePropertyHistory(Base):
     """Properties history for all devices."""
     __tablename__ = "device_property_history"
     id = Column(Integer, primary_key=True)
-    device_id = Column(Integer)
+    device_id = Column(Integer, ForeignKey('device.id'))
+    report_id = Column(Integer, ForeignKey('device_report.id'), index=True)
+    date = Column(DateTime)  # This is redundant but allows fast search of a given property
     name = Column(String)
-    date = Column(DateTime)
     value = Column(String)
+
+    device = relationship("Device", order_by=Device.id)
+    report = relationship("DeviceReport", order_by=DeviceReport.id)
 
 Index(
     "device_property_history_id_name_date",
@@ -224,8 +228,8 @@ class DeviceById(SecureHandler):
                 .filter(DeviceProperty.device_id == device.id)\
                 .order_by(DeviceProperty.name)\
                 .all()
-            logs = session.query(DeviceLog).filter(DeviceLog.device_id == device.id)\
-                .order_by(DeviceLog.date.desc())\
+            logs = session.query(DeviceReport).filter(DeviceReport.device_id == device.id)\
+                .order_by(DeviceReport.date.desc())\
                 .all()
             self.render("device.html", title=_("Device ")+device.ident, device=device, properties=properties, logs=logs)
         else:
@@ -262,7 +266,7 @@ def json_flatten(data):
     return sub
 
 
-class DeviceReport(tornado.web.RequestHandler):
+class DeviceReportPage(tornado.web.RequestHandler):
     def post(self):
         conf_possible_ident = conf_get("report_possible_ident_fields", "ident,hostname").split(',')
         data = tornado.escape.json_decode(self.request.body)
@@ -313,6 +317,8 @@ class DeviceReport(tornado.web.RequestHandler):
 
         if type:
             del data['type']
+        else:
+            type = '_'
 
         device = get_or_create_device(ident)
         if not device.date_seen or date > device.date_seen:
@@ -338,6 +344,24 @@ class DeviceReport(tornado.web.RequestHandler):
         if bool(conf_get("report_json_flatten", "true")):
             data = json_flatten(data)
 
+        report = DeviceReport()
+        report.device_id = device.id
+        report.date = date
+        report.type = type
+
+        previous = session.query(DeviceReport).filter(
+            DeviceReport.device_id == report.device_id,
+            DeviceReport.type == report.type,
+            DeviceReport.date == report.date
+        ).first()
+
+        if not previous:
+            changes = True
+            session.add(report)
+            session.commit()
+        else:
+            report = previous
+
         # We update these report properties in the device properties
         try:
             for name, value in data.iteritems():
@@ -346,17 +370,31 @@ class DeviceReport(tornado.web.RequestHandler):
                 previous = session.query(DevicePropertyHistory).filter(
                     DevicePropertyHistory.device_id == device.id,
                     DevicePropertyHistory.name == name,
-                    DevicePropertyHistory.date == date).first()
+                    DevicePropertyHistory.report_id == report.id).first()
                 if not previous:  # If not, we store it
                     changes = True
-                    session.merge(DevicePropertyHistory(device_id=device.id, name=name, date=date, value=value))
+                    session.merge(
+                        DevicePropertyHistory(
+                            device_id=device.id,
+                            name=name,
+                            date=date,
+                            report_id=report.id,
+                            value=value
+                        )
+                    )
 
                 # We only take the last value as the current one
                 last = session.query(DevicePropertyHistory).filter(
                     DevicePropertyHistory.device_id == device.id,
                     DevicePropertyHistory.name == name,
                     DevicePropertyHistory.date == date).order_by(DevicePropertyHistory.date.desc()).first()
-                session.merge(DeviceProperty(device_id=last.device_id, name=last.name, value=last.value))
+                session.merge(
+                    DeviceProperty(
+                        device_id=last.device_id,
+                        name=last.name,
+                        value=last.value
+                    )
+                )
         except IntegrityError:
             session.rollback()
 
@@ -364,24 +402,6 @@ class DeviceReport(tornado.web.RequestHandler):
             device.date_updated = date
 
         session.commit()
-
-        if type:
-            log = DeviceLog()
-            log.device_id = device.id
-            log.date = date
-            log.type = type
-
-            previous = session.query(DeviceLog).filter(
-                DeviceLog.device_id == log.device_id,
-                DeviceLog.type == log.type,
-                DeviceLog.date == log.date
-            ).first()
-
-            if not previous:
-                changes = True
-                log.content = tornado.escape.json_encode(data)
-                session.add(log)
-                session.commit()
 
         if changes:
             self.write({"status": "ok"})
@@ -418,13 +438,38 @@ class ConfigPage(SecureHandler):
 
 class LastReports(SecureHandler):
 
-    def pagination(self, query, nb=40):
+    def query(self, nb=40):
         """Basic pagination"""
-        paging_from = self.get_argument("paging_to", None)
-        if paging_from:
-            query = query.filter(DeviceLog.id <= int(paging_from))
+        query = session.query(DeviceReport).order_by(DeviceReport.date.desc())
 
-        query = query.limit(nb+1).all()
+        # Paging
+        paging_to = self.request.arguments.get('paging_to')
+        if paging_to:
+            query = query.filter(DeviceReport.id <= int(paging_to[0]))
+            del self.request.arguments['paging_to']
+
+        # Type
+        type = self.request.arguments.get('type')
+        if type:
+            query = query.filter(DeviceReport.type.in_(type))
+            del self.request.arguments['type']
+
+        # Device id
+        device_id = self.get_argument("device_id", None)
+        if device_id:
+            query = query.filter(DeviceReport.device_id == int(device_id))
+            del self.request.arguments['device_id']
+
+        for k, v in self.request.arguments.items():
+            query = query\
+                .join(DevicePropertyHistory, aliased=True)\
+                .filter(
+                    DevicePropertyHistory.name == k,
+                    DevicePropertyHistory.value.in_(v)
+                )
+
+        query = query.limit(nb+1)
+        query = query.all()
 
         link_previous = None
         link_next = None
@@ -442,13 +487,9 @@ class LastReports(SecureHandler):
 
         return query, link_previous, link_next
 
-    def get(self, type=None):
+    def get(self):
         self.check_access_right()
-        reports = session.query(DeviceLog).order_by(DeviceLog.date.desc())
-        if type:
-            reports = reports.filter(DeviceLog.type == type)
-
-        reports, link_previous, link_next = self.pagination(reports)
+        reports, link_previous, link_next = self.query()
 
         self.render(
             "last_reports.html",
@@ -461,7 +502,7 @@ class LastReports(SecureHandler):
 class ShowReport(SecureHandler):
     def get(self, reportId):
         self.check_access_right()
-        report = session.query(DeviceLog).filter(DeviceLog.id == reportId).first()
+        report = session.query(DeviceReport).filter(DeviceReport.id == reportId).first()
         if report:
             properties = session.query(DevicePropertyHistory).filter(
                 DevicePropertyHistory.device_id == report.device_id,
@@ -590,10 +631,9 @@ application = tornado.web.Application(
         (r"/devices", Devices),
         (r"/", Index),
         (r"/about", About),
-        (r"/report", DeviceReport),
+        (r"/report", DeviceReportPage),
         (r"/report/([0-9]+)", ShowReport),
         (r"/last-reports", LastReports),
-        (r"/last-reports/(.+)", LastReports),
         (r"/config", ConfigPage),
         (r"/config/(.+)", ConfigPage),
         (r"/groups", GroupsPage),
