@@ -10,7 +10,7 @@ The main goal is to have a zero cost integration. Making a report is a simple as
     report = {
         "hostname": socket.gethostname(),
         "type": "hello_from_python",
-        "date": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'),
+        "date": datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f'),
         "loadavg": os.getloadavg(),
         "device_group": "g1"
     }
