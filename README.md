@@ -58,3 +58,7 @@ Users can have access or admin rights. Access right allow to see everything but 
 **Device groups**<br />
 Device groups are not (really) used yet.
 ![Groups](https://github.com/fclairamb/edms/blob/master/quick-look/Groups.png?raw=true)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fclairamb/edms/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
